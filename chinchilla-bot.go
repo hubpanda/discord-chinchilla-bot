@@ -73,7 +73,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// check if the message is "!chinchilla"
 	if strings.HasPrefix(m.Content, "!chinchilla") {
 
-		_, err = sendImage(s, m.ChannelID)
+		_, err := sendImage(s, m.ChannelID)
 		if err != nil {
 			fmt.Println("Couldn't display our lord and savior the chinchilla", err)
 		}
@@ -92,7 +92,7 @@ func guildCreate(s *discordgo.Session, event *discordgo.GuildCreate) {
 
 	for _, channel := range event.Guild.Channels {
 		if channel.ID == event.Guild.ID {
-			_, _ = s.ChannelMessageSend(channel.ID, "The chinchilla has come to you mortals. Type !chinchilla to witness its glory")
+			_, _ := s.ChannelMessageSend(channel.ID, "The chinchilla has come to you mortals. Type !chinchilla to witness its glory")
 			return
 		}
 	}
