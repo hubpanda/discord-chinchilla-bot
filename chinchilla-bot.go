@@ -124,5 +124,7 @@ func sendImage(s *discordgo.Session, channelID string) {
 	err := s.ChannelMessageSendEmbed(channelID, embed)
 	if err != nil {
 		fmt.Println("Couldn't display our lord and savior the chinchilla", err)
+		return err
 	}
+	return
 }
