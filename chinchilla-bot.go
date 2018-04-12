@@ -117,7 +117,7 @@ func guildCreate(s *discordgo.Session, event *discordgo.GuildCreate) {
 	}
 }
 
-func sendImage(s *discordgo.Session, channelID string) {
+func sendImage(s *discordgo.Session, channelID string) (*Message, error) {
 	embed := NewEmbed()
 	embed.setTitle("Our Lord and savior the Chinchilla has come!")
 	embed.setImage("https://static.boredpanda.com/blog/wp-content/uploads/2017/02/perfectly-round-chinchilla-camerons-chinchillas-15-58ad5374a8afb__700.jpg")
