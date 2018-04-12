@@ -90,7 +90,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		// Look for the message sender in that guild's current voice states.
 		for _, vs := range g.VoiceStates {
 			if vs.UserID == m.Author.ID {
-				err = sendImage(s, vs.ChannelID)
+				_, err = sendImage(s, vs.ChannelID)
 				if err != nil {
 					fmt.Println("Couldn't display our lord and savior the chinchilla", err)
 				}
@@ -117,9 +117,9 @@ func guildCreate(s *discordgo.Session, event *discordgo.GuildCreate) {
 	}
 }
 
-func sendImage(s *discordgo.Session, channelID string) (*Message, error) {
+func sendImage(s *discordgo.Session, channelID string) (*discordgo.Message, error) {
 	embed := NewEmbed().SetTitle("Our Lord and savior the Chinchilla has come!").SetImage("https://static.boredpanda.com/blog/wp-content/uploads/2017/02/perfectly-round-chinchilla-camerons-chinchillas-15-58ad5374a8afb__700.jpg").MessageEmbed
-	err := s.ChannelMessageSendEmbed(channelID, embed)
+	_, err := s.ChannelMessageSendEmbed(channelID, embed)
 	if err != nil {
 		fmt.Println("Couldn't display our lord and savior the chinchilla", err)
 		return err
