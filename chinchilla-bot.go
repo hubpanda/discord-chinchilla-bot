@@ -119,12 +119,12 @@ func guildCreate(s *discordgo.Session, event *discordgo.GuildCreate) {
 
 func sendImage(s *discordgo.Session, channelID string) (*discordgo.Message, error) {
 	embed := NewEmbed().SetTitle("Our Lord and savior the Chinchilla has come!").SetImage("https://static.boredpanda.com/blog/wp-content/uploads/2017/02/perfectly-round-chinchilla-camerons-chinchillas-15-58ad5374a8afb__700.jpg").MessageEmbed
-	_, err := s.ChannelMessageSendEmbed(channelID, embed)
+	message, err := s.ChannelMessageSendEmbed(channelID, embed)
 	if err != nil {
 		fmt.Println("Couldn't display our lord and savior the chinchilla", err)
-		return err
+		return message, err
 	}
-	return
+	return message, nil
 }
 
 //Embed ...
