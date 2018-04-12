@@ -73,31 +73,12 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// check if the message is "!chinchilla"
 	if strings.HasPrefix(m.Content, "!chinchilla") {
 
-		// Find the channel that the message came from.
-		c, err := s.State.Channel(m.ChannelID)
+		_, err = sendImage(s, m.ChannelID)
 		if err != nil {
-			// Could not find channel.
-			return
+			fmt.Println("Couldn't display our lord and savior the chinchilla", err)
 		}
 
-		// Find the guild for that channel.
-		g, err := s.State.Guild(c.GuildID)
-		if err != nil {
-			// Could not find guild.
-			return
-		}
-
-		// Look for the message sender in that guild's current voice states.
-		for _, vs := range g.VoiceStates {
-			if vs.UserID == m.Author.ID {
-				_, err = sendImage(s, vs.ChannelID)
-				if err != nil {
-					fmt.Println("Couldn't display our lord and savior the chinchilla", err)
-				}
-
-				return
-			}
-		}
+		return
 	}
 }
 
