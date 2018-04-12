@@ -92,7 +92,7 @@ func guildCreate(s *discordgo.Session, event *discordgo.GuildCreate) {
 
 	for _, channel := range event.Guild.Channels {
 		if channel.ID == event.Guild.ID {
-			_, _ := s.ChannelMessageSend(channel.ID, "The chinchilla has come to you mortals. Type !chinchilla to witness its glory")
+			s.ChannelMessageSend(channel.ID, "The chinchilla has come to you mortals. Type !chinchilla to witness its glory")
 			return
 		}
 	}
