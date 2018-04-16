@@ -1,12 +1,18 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"math/rand"
+	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -14,6 +20,41 @@ import (
 func init() {
 	flag.StringVar(&token, "t", "", "Bot Token")
 	flag.Parse()
+}
+
+type BingImage struct {
+	Type            string `json:"_type"`
+	Instrumentation struct {
+		Type string `json:"_type"`
+	} `json:"instrumentation"`
+	ReadLink              string `json:"readLink"`
+	WebSearchURL          string `json:"webSearchUrl"`
+	TotalEstimatedMatches int    `json:"totalEstimatedMatches"`
+	NextOffset            int    `json:"nextOffset"`
+	Value                 []struct {
+		WebSearchURL       string    `json:"webSearchUrl"`
+		Name               string    `json:"name"`
+		ThumbnailURL       string    `json:"thumbnailUrl"`
+		DatePublished      time.Time `json:"datePublished"`
+		ContentURL         string    `json:"contentUrl"`
+		HostPageURL        string    `json:"hostPageUrl"`
+		ContentSize        string    `json:"contentSize"`
+		EncodingFormat     string    `json:"encodingFormat"`
+		HostPageDisplayURL string    `json:"hostPageDisplayUrl"`
+		Width              int       `json:"width"`
+		Height             int       `json:"height"`
+		Thumbnail          struct {
+			Width  int `json:"width"`
+			Height int `json:"height"`
+		} `json:"thumbnail"`
+		ImageInsightsToken string `json:"imageInsightsToken"`
+		InsightsMetadata   struct {
+			PagesIncludingCount int `json:"pagesIncludingCount"`
+			AvailableSizesCount int `json:"availableSizesCount"`
+		} `json:"insightsMetadata"`
+		ImageID     string `json:"imageId"`
+		AccentColor string `json:"accentColor"`
+	} `json:"value"`
 }
 
 var token string
@@ -98,14 +139,37 @@ func guildCreate(s *discordgo.Session, event *discordgo.GuildCreate) {
 	}
 }
 
-func sendImage(s *discordgo.Session, channelID string) (*discordgo.Message, error) {
-	embed := NewEmbed().SetTitle("Our Lord and savior the Chinchilla has come!").SetImage("https://static.boredpanda.com/blog/wp-content/uploads/2017/02/perfectly-round-chinchilla-camerons-chinchillas-15-58ad5374a8afb__700.jpg").MessageEmbed
-	message, err := s.ChannelMessageSendEmbed(channelID, embed)
+func sendImage(s *discordgo.Session, channelID string) (message *discordgo.Message, err error) {
+	imageurl, err := getBingImage()
+	if err != nil {
+		return
+	}
+	embed := NewEmbed().SetTitle("Our Lord and savior the Chinchilla has come!").SetImage(imageurl).MessageEmbed
+	message, err = s.ChannelMessageSendEmbed(channelID, embed)
 	if err != nil {
 		fmt.Println("Couldn't display our lord and savior the chinchilla", err)
 		return message, err
 	}
 	return message, nil
+}
+
+func getBingImage() (url string, err error) {
+	client := &http.Client{}
+
+	req, _ := http.NewRequest("GET", "https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=chinchilla&count=1&offset="+strconv.Itoa(rand.Intn(1000)), nil)
+	req.Header.Set("Ocp-Apim-Subscription-Key", "f0347572e41247b9b86ae2f184b7f4dc")
+	response, err := client.Do(req)
+	if err != nil {
+		return
+	}
+	responseData, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return
+	}
+	var imageData BingImage
+	json.Unmarshal(responseData, &imageData)
+
+	return
 }
 
 //Embed ...
