@@ -168,7 +168,7 @@ func getBingImage() (url string, err error) {
 	}
 	var imageData BingImage
 	json.Unmarshal(responseData, &imageData)
-
+	url = imageData.Value[0].ContentURL
 	return
 }
 
