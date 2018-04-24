@@ -156,7 +156,7 @@ func sendImage(s *discordgo.Session, channelID string) (message *discordgo.Messa
 func getBingImage() (url string, err error) {
 	client := &http.Client{}
 
-	req, _ := http.NewRequest("GET", "https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=chinchilla&count=1&offset="+strconv.Itoa(rand.Intn(1000)), nil)
+	req, _ := http.NewRequest("GET", "https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=chinchilla+cute+animal&count=1&offset="+strconv.Itoa(rand.Intn(100)), nil)
 	req.Header.Set("Ocp-Apim-Subscription-Key", "f0347572e41247b9b86ae2f184b7f4dc")
 	response, err := client.Do(req)
 	if err != nil {
